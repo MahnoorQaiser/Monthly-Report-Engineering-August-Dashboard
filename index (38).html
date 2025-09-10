@@ -1,0 +1,3862 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Engineering Report Dashboard - August 2025</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* CSS Variables for Light and Dark Themes */
+        :root {
+            /* Light Theme */
+            --primary-bg-light: #f8fafc;
+            --secondary-bg-light: #ffffff;
+            --card-bg-light: #ffffff;
+            --accent-color-light: #3b82f6;
+            --success-color-light: #10b981;
+            --warning-color-light: #f59e0b;
+            --danger-color-light: #ef4444;
+            --info-color-light: #06b6d4;
+            --purple-color-light: #8b5cf6;
+            --text-primary-light: #1e293b;
+            --text-secondary-light: #64748b;
+            --border-color-light: #e2e8f0;
+            --hover-bg-light: #f1f5f9;
+            
+            /* Dark Theme */
+            --primary-bg-dark: #0f172a;
+            --secondary-bg-dark: #1e293b;
+            --card-bg-dark: #1e293b;
+            --accent-color-dark: #60a5fa;
+            --success-color-dark: #34d399;
+            --warning-color-dark: #fbbf24;
+            --danger-color-dark: #f87171;
+            --info-color-dark: #22d3ee;
+            --purple-color-dark: #a78bfa;
+            --text-primary-dark: #f1f5f9;
+            --text-secondary-dark: #cbd5e1;
+            --border-color-dark: #334155;
+            --hover-bg-dark: #334155;
+        }
+        /* Default Dark Theme */
+        :root {
+            --primary-bg: var(--primary-bg-dark);
+            --secondary-bg: var(--secondary-bg-dark);
+            --card-bg: var(--card-bg-dark);
+            --accent-color: var(--accent-color-dark);
+            --success-color: var(--success-color-dark);
+            --warning-color: var(--warning-color-dark);
+            --danger-color: var(--danger-color-dark);
+            --info-color: var(--info-color-dark);
+            --purple-color: var(--purple-color-dark);
+            --text-primary: var(--text-primary-dark);
+            --text-secondary: var(--text-secondary-dark);
+            --border-color: var(--border-color-dark);
+            --hover-bg: var(--hover-bg-dark);
+        }
+        /* Light Theme */
+        body.light-theme {
+            --primary-bg: var(--primary-bg-light);
+            --secondary-bg: var(--secondary-bg-light);
+            --card-bg: var(--card-bg-light);
+            --accent-color: var(--accent-color-light);
+            --success-color: var(--success-color-light);
+            --warning-color: var(--warning-color-light);
+            --danger-color: var(--danger-color-light);
+            --info-color: var(--info-color-light);
+            --purple-color: var(--purple-color-light);
+            --text-primary: var(--text-primary-light);
+            --text-secondary: var(--text-secondary-light);
+            --border-color: var(--border-color-light);
+            --hover-bg: var(--hover-bg-light);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 13px; /* Reduced base font size */
+            background-color: var(--primary-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            width: 260px; /* Reduced width */
+            background: linear-gradient(180deg, var(--secondary-bg) 0%, var(--hover-bg) 100%);
+            padding: 15px 0; /* Reduced padding */
+            transition: all 0.3s ease;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            border-right: 1px solid var(--border-color);
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-header {
+            padding: 0 15px 15px; /* Reduced padding */
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 15px; /* Reduced margin */
+            display: flex;
+            align-items: center;
+        }
+        
+        .sidebar-logo {
+            width: 40px; /* Reduced size */
+            height: 40px; /* Reduced size */
+            background: linear-gradient(135deg, var(--accent-color), var(--purple-color));
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px; /* Reduced margin */
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .sidebar-logo i {
+            font-size: 1.5rem; /* Reduced size */
+            color: white;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 1.2rem; /* Reduced size */
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+        
+        .sidebar-header p {
+            font-size: 0.75rem; /* Reduced size */
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+        
+        .sidebar-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .sidebar-menu li {
+            margin-bottom: 4px; /* Reduced margin */
+        }
+        
+        .sidebar-menu a {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px; /* Reduced padding */
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+            position: relative;
+            font-weight: 500;
+            font-size: 0.9rem; /* Reduced size */
+        }
+        
+        .sidebar-menu a:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--text-primary);
+        }
+        
+        .sidebar-menu a.active {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--accent-color);
+            border-left: 3px solid var(--accent-color);
+            font-weight: 600;
+        }
+        
+        .sidebar-menu a.active::before {
+            content: '';
+            position: absolute;
+            right: 15px; /* Reduced padding */
+            width: 6px; /* Reduced size */
+            height: 6px; /* Reduced size */
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+        }
+        
+        .sidebar-menu i {
+            margin-right: 10px; /* Reduced margin */
+            font-size: 1.1rem; /* Reduced size */
+            width: 22px; /* Reduced width */
+            text-align: center;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            flex: 1;
+            margin-left: 260px; /* Reduced width */
+            padding: 15px; /* Reduced padding */
+            transition: all 0.3s ease;
+            padding-bottom: 50px; /* Added padding for footer */
+        }
+        
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px; /* Reduced margin */
+            padding: 15px 20px; /* Reduced padding */
+            background: linear-gradient(90deg, var(--secondary-bg) 0%, var(--hover-bg) 100%);
+            border-radius: 12px; /* Reduced radius */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .top-nav-left h3 {
+            font-size: 1.4rem; /* Reduced size */
+            font-weight: 700;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            color: var(--text-primary);
+        }
+        
+        .top-nav-left h3 i {
+            margin-right: 10px; /* Reduced margin */
+            color: var(--accent-color);
+            font-size: 1.5rem; /* Reduced size */
+        }
+        
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+        }
+        
+        .date-display {
+            background-color: rgba(59, 130, 246, 0.1);
+            padding: 8px 14px; /* Reduced padding */
+            border-radius: 8px; /* Reduced radius */
+            margin-right: 12px; /* Reduced margin */
+            font-size: 0.85rem; /* Reduced size */
+            color: var(--text-secondary);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            display: flex;
+            align-items: center;
+        }
+        
+        .date-display i {
+            margin-right: 6px; /* Reduced margin */
+            color: var(--accent-color);
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 8px 14px; /* Reduced padding */
+            border-radius: 8px; /* Reduced radius */
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .user-profile i {
+            margin-right: 10px; /* Reduced margin */
+            color: var(--accent-color);
+            font-size: 1.2rem; /* Reduced size */
+        }
+        
+        .user-profile span {
+            font-weight: 600;
+            font-size: 0.85rem; /* Reduced size */
+        }
+        
+        /* Theme Toggle */
+        .theme-toggle {
+            background: linear-gradient(135deg, var(--accent-color), var(--purple-color));
+            border: none;
+            border-radius: 50%;
+            width: 35px; /* Reduced size */
+            height: 35px; /* Reduced size */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: 12px; /* Reduced margin */
+            cursor: pointer;
+            color: white;
+            font-size: 1rem; /* Reduced size */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Dashboard Section */
+        .dashboard-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .dashboard-section.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Card Styles */
+        .dashboard-card {
+            background-color: var(--card-bg);
+            border-radius: 12px; /* Reduced radius */
+            padding: 18px; /* Reduced padding */
+            margin-bottom: 18px; /* Reduced margin */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-color), var(--purple-color));
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-3px); /* Reduced movement */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px; /* Reduced margin */
+            padding-bottom: 12px; /* Reduced padding */
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .card-header h5 {
+            font-size: 1rem; /* Reduced size */
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-header h5 i {
+            margin-right: 10px; /* Reduced margin */
+            color: var(--accent-color);
+            font-size: 1.2rem; /* Reduced size */
+        }
+        
+        .card-icon {
+            width: 38px; /* Reduced size */
+            height: 38px; /* Reduced size */
+            border-radius: 8px; /* Reduced radius */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem; /* Reduced size */
+        }
+        
+        .icon-blue {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--accent-color);
+        }
+        
+        .icon-green {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--success-color);
+        }
+        
+        .icon-yellow {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--warning-color);
+        }
+        
+        .icon-red {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--danger-color);
+        }
+        
+        /* Stats Cards */
+        .stats-card {
+            background-color: var(--card-bg);
+            border-radius: 12px; /* Reduced radius */
+            padding: 16px; /* Reduced padding */
+            margin-bottom: 16px; /* Reduced margin */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent-color), var(--purple-color));
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-3px); /* Reduced movement */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .stats-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px; /* Reduced margin */
+        }
+        
+        .stats-card-title {
+            font-size: 0.8rem; /* Reduced size */
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stats-card-icon {
+            width: 38px; /* Reduced size */
+            height: 38px; /* Reduced size */
+            border-radius: 8px; /* Reduced radius */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1rem; /* Reduced size */
+        }
+        
+        .stats-value {
+            font-size: 2rem; /* Reduced size */
+            font-weight: 700;
+            margin-bottom: 4px; /* Reduced margin */
+            background: linear-gradient(90deg, var(--accent-color), var(--purple-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stats-change {
+            font-size: 0.8rem; /* Reduced size */
+            display: flex;
+            align-items: center;
+        }
+        
+        .stats-change.positive {
+            color: var(--success-color);
+        }
+        
+        .stats-change.negative {
+            color: var(--danger-color);
+        }
+        
+        /* Chart Container */
+        .chart-container {
+            height: 280px; /* Reduced height */
+            position: relative;
+            margin-bottom: 16px; /* Reduced margin */
+        }
+        
+        /* Table Styles */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px; /* Reduced margin */
+            font-size: 0.85rem; /* Reduced size */
+        }
+        
+        .data-table th,
+        .data-table td {
+            padding: 10px 14px; /* Reduced padding */
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table th {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 0.8rem; /* Reduced size */
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .data-table td {
+            color: var(--text-secondary);
+        }
+        
+        .data-table tr:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px; /* Reduced padding */
+            border-radius: 16px; /* Reduced radius */
+            font-size: 0.7rem; /* Reduced size */
+            font-weight: 600;
+        }
+        
+        .status-completed {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: var(--success-color);
+        }
+        
+        .status-in-progress {
+            background-color: rgba(245, 158, 11, 0.2);
+            color: var(--warning-color);
+        }
+        
+        .status-pending {
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--danger-color);
+        }
+        
+        /* Progress Bar */
+        .progress-bar-container {
+            margin-bottom: 16px; /* Reduced margin */
+        }
+        
+        .progress-bar-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px; /* Reduced margin */
+            font-size: 0.85rem; /* Reduced size */
+            font-weight: 500;
+        }
+        
+        .progress-bar {
+            height: 10px; /* Reduced height */
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px; /* Reduced radius */
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            height: 100%;
+            border-radius: 5px; /* Reduced radius */
+            background: linear-gradient(90deg, var(--accent-color), var(--purple-color));
+            position: relative;
+        }
+        
+        .progress-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.2) 100%);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -100% 0; }
+            100% { background-position: 100% 0; }
+        }
+        
+        /* Project Card */
+        .project-card {
+            background-color: var(--card-bg);
+            border-radius: 12px; /* Reduced radius */
+            padding: 16px; /* Reduced padding */
+            margin-bottom: 16px; /* Reduced margin */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--accent-color);
+            border: 1px solid var(--border-color);
+        }
+        
+        .project-card:hover {
+            transform: translateX(3px); /* Reduced movement */
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .project-card h6 {
+            font-size: 0.95rem; /* Reduced size */
+            font-weight: 600;
+            margin-bottom: 10px; /* Reduced margin */
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+        }
+        
+        .project-card p {
+            font-size: 0.85rem; /* Reduced size */
+            color: var(--text-secondary);
+            margin-bottom: 12px; /* Reduced margin */
+            line-height: 1.4; /* Reduced line height */
+        }
+        
+        /* Toggle Button */
+        .toggle-btn {
+            background: linear-gradient(135deg, var(--accent-color), var(--purple-color));
+            color: white;
+            border: none;
+            border-radius: 6px; /* Reduced radius */
+            padding: 8px 14px; /* Reduced padding */
+            font-size: 0.85rem; /* Reduced size */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .toggle-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+        }
+        
+        /* Details Content */
+        .details-content {
+            display: none;
+            margin-top: 16px; /* Reduced margin */
+            padding: 16px; /* Reduced padding */
+            background-color: rgba(59, 130, 246, 0.05);
+            border-radius: 10px; /* Reduced radius */
+            border: 1px solid var(--border-color);
+        }
+        
+        .details-content.show {
+            display: block;
+            animation: slideDown 0.3s ease-in-out;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; max-height: 0; }
+            to { opacity: 1; max-height: 500px; }
+        }
+        
+        /* Responsive Styles */
+        .menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px; /* Reduced padding */
+            left: 15px; /* Reduced padding */
+            z-index: 1001;
+            background: linear-gradient(135deg, var(--accent-color), var(--purple-color));
+            color: white;
+            border: none;
+            border-radius: 6px; /* Reduced radius */
+            padding: 8px 12px; /* Reduced padding */
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stats-value {
+                font-size: 1.8rem; /* Reduced size */
+            }
+            
+            .chart-container {
+                height: 220px; /* Reduced height */
+            }
+            
+            .top-nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .top-nav-right {
+                margin-top: 12px; /* Reduced margin */
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+        
+        /* Custom Elements */
+        .metric-highlight {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(139, 92, 246, 0.1));
+            border-radius: 10px; /* Reduced radius */
+            padding: 16px; /* Reduced padding */
+            margin-bottom: 16px; /* Reduced margin */
+            border-left: 3px solid var(--accent-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+        
+        .metric-highlight h6 {
+            font-size: 0.85rem; /* Reduced size */
+            color: var(--text-secondary);
+            margin-bottom: 6px; /* Reduced margin */
+            font-weight: 600;
+        }
+        
+        .metric-highlight .value {
+            font-size: 1.8rem; /* Reduced size */
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .metric-highlight .change {
+            font-size: 0.8rem; /* Reduced size */
+            color: var(--success-color);
+            display: flex;
+            align-items: center;
+        }
+        
+        .metric-highlight .change i {
+            margin-right: 5px; /* Reduced margin */
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 14px; /* Reduced margin */
+            padding-bottom: 14px; /* Reduced padding */
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .activity-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .activity-icon {
+            width: 35px; /* Reduced size */
+            height: 35px; /* Reduced size */
+            border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px; /* Reduced margin */
+            flex-shrink: 0;
+        }
+        
+        .activity-icon i {
+            color: var(--accent-color);
+            font-size: 1rem; /* Reduced size */
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-content h6 {
+            font-size: 0.9rem; /* Reduced size */
+            margin-bottom: 4px; /* Reduced margin */
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .activity-content p {
+            font-size: 0.85rem; /* Reduced size */
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            line-height: 1.4; /* Reduced line height */
+        }
+        
+        .activity-time {
+            font-size: 0.75rem; /* Reduced size */
+            color: var(--text-secondary);
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        
+        /* Terminal Cards */
+        .terminal-card {
+            background-color: var(--card-bg);
+            border-radius: 12px; /* Reduced radius */
+            padding: 16px; /* Reduced padding */
+            margin-bottom: 16px; /* Reduced margin */
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .terminal-card:hover {
+            transform: translateY(-3px); /* Reduced movement */
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+        
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px; /* Reduced margin */
+        }
+        
+        .terminal-icon {
+            width: 35px; /* Reduced size */
+            height: 35px; /* Reduced size */
+            border-radius: 8px; /* Reduced radius */
+            background: linear-gradient(135deg, var(--accent-color), var(--purple-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px; /* Reduced margin */
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .terminal-icon i {
+            color: white;
+            font-size: 1rem; /* Reduced size */
+        }
+        
+        .terminal-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1rem; /* Reduced size */
+        }
+        
+        .terminal-tasks {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .terminal-tasks li {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px; /* Reduced margin */
+            font-size: 0.85rem; /* Reduced size */
+            color: var(--text-secondary);
+            line-height: 1.4; /* Reduced line height */
+        }
+        
+        .terminal-tasks li i {
+            color: var(--success-color);
+            margin-right: 8px; /* Reduced margin */
+            font-size: 0.9rem; /* Reduced size */
+            margin-top: 2px; /* Reduced margin */
+            flex-shrink: 0;
+        }
+        
+        /* Filter Pills */
+        .filter-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Reduced gap */
+            margin-bottom: 20px; /* Reduced margin */
+        }
+        
+        .filter-pill {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 20px; /* Reduced radius */
+            padding: 6px 14px; /* Reduced padding */
+            font-size: 0.85rem; /* Reduced size */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .filter-pill:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--text-primary);
+            border-color: var(--accent-color);
+        }
+        
+        .filter-pill.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .org-level {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .department-node.full-width {
+                max-width: 100%;
+            }
+            
+            .team-grid {
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* Reduced width */
+            }
+            
+            .org-node {
+                min-width: 160px; /* Reduced width */
+            }
+        }
+        
+        /* Button Styles */
+        .btn-custom {
+            background: linear-gradient(135deg, var(--accent-color), var(--purple-color));
+            color: white;
+            border: none;
+            border-radius: 6px; /* Reduced radius */
+            padding: 8px 16px; /* Reduced padding */
+            font-size: 0.85rem; /* Reduced size */
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+            display: inline-flex;
+            align-items: center;
+            margin-right: 8px; /* Reduced margin */
+            margin-bottom: 8px; /* Reduced margin */
+        }
+        
+        .btn-custom:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-custom i {
+            margin-right: 6px; /* Reduced margin */
+        }
+        
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px; /* Reduced gap */
+            margin-bottom: 20px; /* Reduced margin */
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px; /* Reduced padding */
+        }
+        
+        .tab-btn {
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px; /* Reduced radius */
+            padding: 8px 14px; /* Reduced padding */
+            font-size: 0.85rem; /* Reduced size */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tab-btn:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--text-primary);
+            border-color: var(--accent-color);
+        }
+        
+        .tab-btn.active {
+            background-color: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .tab-btn i {
+            margin-right: 6px; /* Reduced margin */
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        /* Notification Badge */
+        .notification-badge {
+            position: absolute;
+            top: -6px; /* Reduced position */
+            right: -6px; /* Reduced position */
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 50%;
+            width: 18px; /* Reduced size */
+            height: 18px; /* Reduced size */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem; /* Reduced size */
+            font-weight: 700;
+            box-shadow: 0 2px 4px rgba(239, 68, 68, 0.5);
+        }
+        
+        /* Info Card */
+        .info-card {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--accent-color);
+            border-radius: 6px; /* Reduced radius */
+            padding: 12px; /* Reduced padding */
+            margin-bottom: 16px; /* Reduced margin */
+        }
+        
+        .info-card p {
+            margin-bottom: 0;
+            color: var(--text-secondary);
+            font-size: 0.85rem; /* Reduced size */
+        }
+        
+        /* Progress Circle */
+        .progress-circle {
+            position: relative;
+            width: 100px; /* Reduced size */
+            height: 100px; /* Reduced size */
+            border-radius: 50%;
+            background: conic-gradient(var(--accent-color) 0% var(--progress), rgba(255, 255, 255, 0.1) var(--progress) 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 12px; /* Reduced margin */
+        }
+        
+        .progress-circle::before {
+            content: "";
+            position: absolute;
+            width: 75px; /* Reduced size */
+            height: 75px; /* Reduced size */
+            border-radius: 50%;
+            background-color: var(--card-bg);
+        }
+        
+        .progress-value {
+            position: relative;
+            z-index: 1;
+            font-size: 1.3rem; /* Reduced size */
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        /* Terminal List Styles */
+        .terminal-list-container {
+            background-color: rgba(30, 41, 59, 0.5);
+            border-radius: 10px; /* Reduced radius */
+            padding: 16px; /* Reduced padding */
+            border: 1px solid var(--border-color);
+            max-height: 550px; /* Reduced height */
+            overflow-y: auto;
+        }
+        
+        .terminal-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Reduced gap */
+        }
+        
+        .terminal-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px; /* Reduced padding */
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px; /* Reduced radius */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        
+        .terminal-item:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-color: var(--accent-color);
+            transform: translateX(3px); /* Reduced movement */
+        }
+        
+        .terminal-item.active {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), rgba(139, 92, 246, 0.1));
+            border-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+        
+        .terminal-icon {
+            width: 35px; /* Reduced size */
+            height: 35px; /* Reduced size */
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-color), var(--purple-color));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px; /* Reduced margin */
+            flex-shrink: 0;
+        }
+        
+        .terminal-icon i {
+            color: white;
+            font-size: 1rem; /* Reduced size */
+        }
+        
+        .terminal-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+            font-size: 0.9rem; /* Reduced size */
+        }
+        
+        .terminal-status {
+            margin-left: 8px; /* Reduced margin */
+        }
+        
+        /* Terminal Details Styles */
+        .terminal-details-container {
+            background-color: rgba(30, 41, 59, 0.5);
+            border-radius: 10px; /* Reduced radius */
+            padding: 20px; /* Reduced padding */
+            border: 1px solid var(--border-color);
+            min-height: 450px; /* Reduced height */
+        }
+        
+        .terminal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; /* Reduced margin */
+            padding-bottom: 12px; /* Reduced padding */
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .terminal-header h3 {
+            margin: 0;
+            font-size: 1.6rem; /* Reduced size */
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-color), var(--purple-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .terminal-header .terminal-status {
+            margin-left: 12px; /* Reduced margin */
+        }
+        
+        .terminal-stats {
+            display: flex;
+            gap: 12px; /* Reduced gap */
+            margin-bottom: 20px; /* Reduced margin */
+        }
+        
+        .terminal-stat {
+            flex: 1;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px; /* Reduced radius */
+            padding: 12px; /* Reduced padding */
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+        
+        .terminal-stat-value {
+            font-size: 1.6rem; /* Reduced size */
+            font-weight: 700;
+            color: var(--accent-color);
+            margin-bottom: 4px; /* Reduced margin */
+        }
+        
+        .terminal-stat-label {
+            font-size: 0.85rem; /* Reduced size */
+            color: var(--text-secondary);
+        }
+        
+        .activity-section {
+            margin-bottom: 20px; /* Reduced margin */
+        }
+        
+        .activity-section-title {
+            font-size: 1.1rem; /* Reduced size */
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px; /* Reduced margin */
+            display: flex;
+            align-items: center;
+        }
+        
+        .activity-section-title i {
+            margin-right: 8px; /* Reduced margin */
+            color: var(--accent-color);
+        }
+        
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px; /* Reduced gap */
+        }
+        
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 8px; /* Reduced radius */
+            padding: 12px; /* Reduced padding */
+            border-left: 3px solid var(--accent-color);
+            transition: all 0.3s ease;
+        }
+        
+        .activity-item:hover {
+            background-color: rgba(59, 130, 246, 0.05);
+            transform: translateX(3px); /* Reduced movement */
+        }
+        
+        .activity-icon {
+            width: 32px; /* Reduced size */
+            height: 32px; /* Reduced size */
+            border-radius: 50%;
+            background-color: rgba(59, 130, 246, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 12px; /* Reduced margin */
+            flex-shrink: 0;
+        }
+        
+        .activity-icon i {
+            color: var(--accent-color);
+            font-size: 1rem; /* Reduced size */
+        }
+        
+        .activity-content {
+            flex: 1;
+        }
+        
+        .activity-type {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px; /* Reduced margin */
+            font-size: 0.9rem; /* Reduced size */
+        }
+        
+        .activity-description {
+            color: var(--text-secondary);
+            font-size: 0.85rem; /* Reduced size */
+            line-height: 1.4; /* Reduced line height */
+        }
+        
+        .activity-status {
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+        
+        .terminal-note {
+            background-color: rgba(59, 130, 246, 0.1);
+            border-radius: 8px; /* Reduced radius */
+            padding: 12px; /* Reduced padding */
+            margin-top: 16px; /* Reduced margin */
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .terminal-note p {
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 0.85rem; /* Reduced size */
+            line-height: 1.4; /* Reduced line height */
+        }
+        
+        /* Footer Styles */
+        .dashboard-footer {
+            position: fixed;
+            bottom: 15px;
+            left: 15px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            z-index: 1000;
+            transition: color 0.3s ease;
+        }
+        
+        .dashboard-footer:hover {
+            opacity: 1;
+            color: var(--accent-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div>
+                    <h2>APL Engineering</h2>
+                    <p>Monthly Report - August 2025</p>
+                </div>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active" onclick="showSection('overview', this)"><i class="bi bi-speedometer2"></i> Overview</a></li>
+                <li><a href="#" onclick="showSection('retail-engineering', this)"><i class="bi bi-shop"></i> Retail Engineering</a></li>
+                <li><a href="#" onclick="showSection('retail-maintenance', this)"><i class="bi bi-tools"></i> Retail Maintenance</a></li>
+                <li><a href="#" onclick="showSection('terminal-maintenance', this)"><i class="bi bi-gear"></i> Terminal Maintenance</a></li>
+                <li><a href="#" onclick="showSection('documentation', this)"><i class="bi bi-file-earmark-text"></i> Documentation</a></li>
+                <li><a href="#" onclick="showSection('projects', this)"><i class="bi bi-kanban"></i> Projects</a></li>
+            </ul>
+        </div>
+        <!-- Main Content -->
+        <div class="main-content">
+            <button class="menu-toggle" id="menuToggle">
+                <i class="bi bi-list"></i>
+            </button>
+            
+            <!-- Top Navigation -->
+            <div class="top-nav">
+                <div class="top-nav-left">
+                    <h3><i class="bi bi-graph-up"></i> Engineering Dashboard</h3>
+                </div>
+                <div class="top-nav-right">
+                    <div class="date-display">
+                        <i class="bi bi-calendar3"></i> August 2025
+                    </div>
+                    <div class="user-profile">
+                        <i class="bi bi-person-circle"></i>
+                        <span>Shoaib Ahmed (Manager Engineering)</span>
+                    </div>
+                    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+                        <i class="bi bi-moon-fill" id="themeIcon"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Overview Section -->
+            <div id="overview" class="dashboard-section active">
+                <div class="row">
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+                        <div class="stats-card">
+                            <div class="stats-card-header">
+                                <div class="stats-card-title">Outlets Commissioned</div>
+                                <div class="stats-card-icon icon-green">
+                                    <i class="bi bi-building-add"></i>
+                                </div>
+                            </div>
+                            <div class="stats-value">3</div>
+                            <div class="stats-change positive">
+                                <i class="bi bi-arrow-up"></i> This Month
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+                        <div class="stats-card">
+                            <div class="stats-card-header">
+                                <div class="stats-card-title">Maintenance Jobs</div>
+                                <div class="stats-card-icon icon-blue">
+                                    <i class="bi bi-tools"></i>
+                                </div>
+                            </div>
+                            <div class="stats-value">487</div>
+                            <div class="stats-change positive">
+                                <i class="bi bi-arrow-up"></i> 80% Resolved
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+                        <div class="stats-card">
+                            <div class="stats-card-header">
+                                <div class="stats-card-title">Licenses Renewed</div>
+                                <div class="stats-card-icon icon-yellow">
+                                    <i class="bi bi-file-earmark-check"></i>
+                                </div>
+                            </div>
+                            <div class="stats-value">617</div>
+                            <div class="stats-change positive">
+                                <i class="bi bi-arrow-up"></i> 82% Completed
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-3 col-lg-6 col-md-6 mb-4">
+                        <div class="stats-card">
+                            <div class="stats-card-header">
+                                <div class="stats-card-title">Terminal Projects</div>
+                                <div class="stats-card-icon icon-red">
+                                    <i class="bi bi-geo-alt"></i>
+                                </div>
+                            </div>
+                            <div class="stats-value">9</div>
+                            <div class="stats-change positive">
+                                <i class="bi bi-arrow-up"></i> Active Terminals
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h5><i class="bi bi-file-earmark-check"></i> Explosive Licenses Renewal by Region</h5>
+                                <div class="card-icon icon-blue">
+                                    <i class="bi bi-bar-chart"></i>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="licensesByRegionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-lg-6 mb-4">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h5><i class="bi bi-tools"></i> Maintenance Complaints Distribution</h5>
+                                <div class="card-icon icon-green">
+                                    <i class="bi bi-pie-chart"></i>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="complaintsDistributionChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Retail Engineering Section -->
+            <div id="retail-engineering" class="dashboard-section">
+                <div class="tab-navigation">
+                    <button class="tab-btn active" onclick="showTab('outlets-commissioned', this)"><i class="bi bi-building-add"></i> Outlets Commissioned</button>
+                    <button class="tab-btn" onclick="showTab('sites-by-fiscal-year', this)"><i class="bi bi-calendar-check"></i> Sites by Fiscal Year</button>
+                    <button class="tab-btn" onclick="showTab('outlet-construction', this)"><i class="bi bi-hammer"></i> Outlet Construction</button>
+                    <button class="tab-btn" onclick="showTab('dealer-financed', this)"><i class="bi bi-cash-stack"></i> Dealer Financed Sites</button>
+                    <button class="tab-btn" onclick="showTab('sites-planning', this)"><i class="bi bi-clipboard-check"></i> Ongoing CF Sites</button>
+                    <button class="tab-btn" onclick="showTab('capital-reinjection', this)"><i class="bi bi-arrow-repeat"></i> Capital Reinjection</button>
+                    <button class="tab-btn" onclick="showTab('sites-on-hold', this)"><i class="bi bi-pause-circle"></i> Sites On Hold</button>
+                    <button class="tab-btn" onclick="showTab('licenses-renewal', this)"><i class="bi bi-file-earmark-check"></i> Licenses Renewal</button>
+                </div>
+                
+                <!-- Outlets Commissioned Tab -->
+                <div id="outlets-commissioned" class="tab-content active">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-building-add"></i> Outlets Commissioned This Month</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-check-circle-fill text-success me-2"></i> Star Petroleum Service</h6>
+                                    <p>khayab-e-jinnah Karachi</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-check-circle-fill text-success me-2"></i> Al Wali Filling Station</h6>
+                                    <p>Rawalpindi</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-check-circle-fill text-success me-2"></i> Abdullah &amp; Sons Petroleum</h6>
+                                    <p>Faisalabad</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sites by Fiscal Year Tab -->
+                <div id="sites-by-fiscal-year" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-calendar-check"></i> Sites Commissioned by Fiscal Year</h5>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="sitesByFiscalYearChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Outlet Construction Tab -->
+                <div id="outlet-construction" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-hammer"></i> Outlet Construction Progress</h5>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="outletProgressChart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="project-card">
+                                <h6>Hazara Service Area South Bound</h6>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-label">
+                                        <span>Completion</span>
+                                        <span>70%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-bar-fill" style="width: 65%;"></div>
+                                    </div>
+                                </div>
+                                <button class="toggle-btn" onclick="toggleDetails('hazara-detail')">
+                                    <i class="bi bi-eye me-1"></i> Show Details
+                                </button>
+                                <div id="hazara-detail" class="details-content">
+                                    <p>North Bound Fueling Facility &amp; mosque have been commissioned , While finishing work on South Bound is Ongoing</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="project-card">
+                                <h6>Quality Filling Station</h6>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-label">
+                                        <span>Completion</span>
+                                        <span>88%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-bar-fill" style="width: 88%;"></div>
+                                    </div>
+                                </div>
+                                <button class="toggle-btn" onclick="toggleDetails('quality-detail')">
+                                    <i class="bi bi-eye me-1"></i> Show Details
+                                </button>
+                                <div id="quality-detail" class="details-content">
+                                    <p>Grey Structures are almost completed. Tile Work &amp; Underground Tank Construction almost completed. APL assets / equipment procurement is in process.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="project-card">
+                                <h6>Askari 14 Rawalpindi</h6>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-label">
+                                        <span>Completion</span>
+                                        <span>85%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-bar-fill" style="width: 88%;"></div>
+                                    </div>
+                                </div>
+                                <button class="toggle-btn" onclick="toggleDetails('askari-detail')">
+                                    <i class="bi bi-eye me-1"></i> Show Details
+                                </button>
+                                <div id="askari-detail" class="details-content">
+                                    <p>Grey Structures are almost completed. Tuff tile Work is in process &amp; Underground Tank Construction almost completed. APL assets / equipment procurement is in process.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 mb-4">
+                            <div class="project-card">
+                                <h6>Askari Quetta</h6>
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar-label">
+                                        <span>Completion</span>
+                                        <span>80%</span>
+                                    </div>
+                                    <div class="progress-bar">
+                                        <div class="progress-bar-fill" style="width: 80%;"></div>
+                                    </div>
+                                </div>
+                                <button class="toggle-btn" onclick="toggleDetails('quetta-detail')">
+                                    <i class="bi bi-eye me-1"></i> Show Details
+                                </button>
+                                <div id="quetta-detail" class="details-content">
+                                    <p>Signage, units &amp; other equipment's are on hold by Retail Development due to front site drain issue settlement with AWT (Army Welfare Trust).</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dealer Financed Sites Tab -->
+                <div id="dealer-financed" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-cash-stack"></i> Dealer Financed Sites by Region</h5>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="dealerFinancedChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sites in Planning Tab -->
+                <div id="sites-planning" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-clipboard-check"></i> CF Sites in Planning, Approval &amp; Procurement</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Site Name</th>
+                                        <th>Location</th>
+                                        <th>Status</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Srinagar Highway H-9</td>
+                                        <td>Islamabad</td>
+                                        <td><span class="status-badge status-in-progress">DC NOC is Awaited </span></td>
+                                        <td>
+                                            <button class="toggle-btn" onclick="toggleDetails('srinagar-detail')">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <div id="srinagar-detail" class="details-content">
+                                                <p>The project is divided into two phases. Phase 1 has been awarded and includes the construction of boundary wall, tank pits & earthing pits. Z-Design Studio has been hired for the architectural design of Phase 2, and the initial proposal has been shared with RD. A revised proposal has been requested to improve NFR visibility and utilization.Moreover progress of phase 1 is currently suffering due to rainy season.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Falcon Filling Station-M9 </td>
+                                        <td>Karachi</td>
+                                        <td><span class="status-badge status-in-progress">85% Complete</span></td>
+                                        <td>
+                                            <button class="toggle-btn" onclick="toggleDetails('falcon-detail')">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <div id="falcon-detail" class="details-content">
+                                                <p>Approval for additional works was received , currently procurement process is underway to get the remaining work done.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>DHA Phase-8</td>
+                                        <td>Karachi</td>
+                                        <td><span class="status-badge status-in-progress">Third Party Engaged</span></td>
+                                        <td>
+                                            <button class="toggle-btn" onclick="toggleDetails('dha-detail')">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <div id="dha-detail" class="details-content">
+                                                <p>Initially, DHA-specified requirements were submitted using in-house resources on the request of RD. However, due to objections by Authority, RD has engaged a third party to process the case to seek necessary approvals from DHA.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Izmeer Town Lahore</td>
+                                        <td>Lahore</td>
+                                        <td><span class="status-badge status-in-progress">Approvals Received</span></td>
+                                        <td>
+                                            <button class="toggle-btn" onclick="toggleDetails('izmeer-detail')">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <div id="izmeer-detail" class="details-content">
+                                                <p>Contractor mobilization is underway; however, severe rains and flooding in Lahore are causing delays, given the compliance period of 180 days.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Wahadat Road Lahore</td>
+                                        <td>Lahore</td>
+                                        <td><span class="status-badge status-in-progress">Approvals Received</span></td>
+                                        <td>
+                                            <button class="toggle-btn" onclick="toggleDetails('wahadat-detail')">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <div id="wahadat-detail" class="details-content">
+                                                <p>DC NOC and explosive construction approval have been received, while the award of construction is under the procurement process.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lake City Lahore</td>
+                                        <td>Lahore</td>
+                                        <td><span class="status-badge status-in-progress">Bidding in Process</span></td>
+                                        <td>
+                                            <button class="toggle-btn" onclick="toggleDetails('lake-detail')">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <div id="lake-detail" class="details-content">
+                                                <p>DC NOC and explosive construction approval have been received. Revised bids have also been received, and the approval process for the award of the job is currently underway.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Khayaban-e-Jinnah Lahore</td>
+                                        <td>Lahore</td>
+                                        <td><span class="status-badge status-in-progress">Downfitting in Process</span></td>
+                                        <td>
+                                            <button class="toggle-btn" onclick="toggleDetails('khayaban-detail')">
+                                                <i class="bi bi-eye me-1"></i> View
+                                            </button>
+                                            <div id="khayaban-detail" class="details-content">
+                                                <p>The DC NOC and explosive construction approval have been received. The tanks have been delivered and buried, and the downfitting requisition has been shared with the Procurement Department for further processing. The remaining asset ordering details and MRNs are in progress. In this case, the dealer is constructing the site independently, with APL reimbursing the cost. However, challenges remain regarding rate establishment and quality assurance, which should have been addressed prior to finalizing the agreement with the dealer.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Capital Reinjection Sites Tab -->
+                <div id="capital-reinjection" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-arrow-repeat"></i> Capital Reinjection Sites</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6>Quality Filling Station Islamabad</h6>
+                                    <button class="toggle-btn" onclick="toggleDetails('quality-isl-detail')">
+                                        <i class="bi bi-eye me-1"></i> Show Details
+                                    </button>
+                                    <div id="quality-isl-detail" class="details-content">
+                                        <p>Contractor has started work on 3rd phase &amp; work on fuel pipe line, tuff tiles replacement, major electrification have been completed. Minor work is left.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6>Fazaia Filling Station Lahore</h6>
+                                    <button class="toggle-btn" onclick="toggleDetails('fazaia-detail')">
+                                        <i class="bi bi-eye me-1"></i> Show Details
+                                    </button>
+                                    <div id="fazaia-detail" class="details-content">
+                                        <p>Explosive approval has been received. The technical evaluation has been forwarded to procurement.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6>Subaiz F/S Lahore</h6>
+                                    <button class="toggle-btn" onclick="toggleDetails('subaiz-detail')">
+                                        <i class="bi bi-eye me-1"></i> Show Details
+                                    </button>
+                                    <div id="subaiz-detail" class="details-content">
+                                        <p>Estimates have been shared with Retail Development. This site is now planned to be converted back into a company-operated site.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6>Askari 13 Peco Road Lahore</h6>
+                                    <button class="toggle-btn" onclick="toggleDetails('askari13-detail')">
+                                        <i class="bi bi-eye me-1"></i> Show Details
+                                    </button>
+                                    <div id="askari13-detail" class="details-content">
+                                        <p>Explosive approval has been received. The technical evaluation has been forwarded to procurement.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sites On Hold Tab -->
+                <div id="sites-on-hold" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-pause-circle"></i> Sites Currently On Hold</h5>
+                        </div>
+                        <div class="info-card">
+                            <p><i class="bi bi-info-circle me-2"></i>The sites currently on hold as per the advice of RD include:</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-pause-fill text-warning me-2"></i> Diplomatic Enclave</h6>
+                                    <p>Islamabad</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-pause-fill text-warning me-2"></i> Fort Road</h6>
+                                    <p>Rawalpindi</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-pause-fill text-warning me-2"></i> Pindi Gheb</h6>
+                                    <p>D.I. Khan Motorway</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-pause-fill text-warning me-2"></i> Essa Khel</h6>
+                                    <p>D.I. Khan Motorway</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Licenses Renewal Tab -->
+                <div id="licenses-renewal" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-file-earmark-check"></i> Explosive Licenses Renewal</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <div class="chart-container">
+                                    <canvas id="licensesChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mb-4">
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <div class="stats-card">
+                                            <div class="stats-card-header">
+                                                <div class="stats-card-title">Retail Outlets</div>
+                                            </div>
+                                            <div class="stats-value">617/747</div>
+                                            <div class="stats-change positive">
+                                                <i class="bi bi-arrow-up"></i> 82% Renewed
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <div class="stats-card">
+                                            <div class="stats-card-header">
+                                                <div class="stats-card-title">Terminals</div>
+                                            </div>
+                                            <div class="stats-value">3/8</div>
+                                            <div class="stats-change negative">
+                                                <i class="bi bi-arrow-down"></i> 38% Renewed
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="toggle-btn" onclick="toggleDetails('licenses-digitized-detail')">
+                                    <i class="bi bi-eye me-1"></i> Show Digitization Details
+                                </button>
+                                <div id="licenses-digitized-detail" class="details-content">
+                                    <p>To enhance record-keeping and minimize paperwork, the Engineering Department has digitized explosive licenses along with their approved plans.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Retail Maintenance Section -->
+            <div id="retail-maintenance" class="dashboard-section">
+                <div class="tab-navigation">
+                    <button class="tab-btn active" onclick="showTab('maintenance-overview', this)"><i class="bi bi-tools"></i> Maintenance Overview</button>
+                    <button class="tab-btn" onclick="showTab('complaints-by-type', this)"><i class="bi bi-list-check"></i> Complaints by Type</button>
+                    <button class="tab-btn" onclick="showTab('regional-performance', this)"><i class="bi bi-geo-alt"></i> Regional Performance</button>
+                </div>
+                
+                <!-- Maintenance Overview Tab -->
+                <div id="maintenance-overview" class="tab-content active">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-tools"></i> Retail Maintenance Overview</h5>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="retailMaintenanceChart"></canvas>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col-md-4 text-center">
+                                <div class="metric-highlight">
+                                    <h6>Complaints Resolved</h6>
+                                    <div class="value">487</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="metric-highlight">
+                                    <h6>Pending Complaints</h6>
+                                    <div class="value">121</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <div class="metric-highlight">
+                                    <h6>Resolution Rate</h6>
+                                    <div class="value">80%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Complaints by Type Tab -->
+                <div id="complaints-by-type" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-list-check"></i> Maintenance Complaints by Type</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <div class="chart-container">
+                                    <canvas id="complaintsByTypeChart"></canvas>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mb-4">
+                                <div class="table-responsive">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Complaint Type</th>
+                                                <th>Count</th>
+                                                <th>Percentage</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Dispensers</td>
+                                                <td>352</td>
+                                                <td>72.3%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Signages</td>
+                                                <td>84</td>
+                                                <td>17.2%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Civil Works</td>
+                                                <td>140</td>
+                                                <td>28.7%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Generator Services</td>
+                                                <td>25</td>
+                                                <td>5.1%</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Electrical Works</td>
+                                                <td>10</td>
+                                                <td>2.1%</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Regional Performance Tab -->
+                <div id="regional-performance" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-geo-alt"></i> Regional Maintenance Performance</h5>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="regionalPerformanceChart"></canvas>
+                        </div>
+                        <div class="table-responsive mt-4">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Region</th>
+                                        <th>Total Complaints</th>
+                                        <th>Resolved</th>
+                                        <th>Pending</th>
+                                        <th>Resolution Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Rawalpindi</td>
+                                        <td>285</td>
+                                        <td>239</td>
+                                        <td>46</td>
+                                        <td>83%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Peshawar</td>
+                                        <td>44</td>
+                                        <td>41</td>
+                                        <td>3</td>
+                                        <td>93%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lahore</td>
+                                        <td>104</td>
+                                        <td>103</td>
+                                        <td>1</td>
+                                        <td>99%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Multan</td>
+                                        <td>40</td>
+                                        <td>31</td>
+                                        <td>9</td>
+                                        <td>77%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>South</td>
+                                        <td>82</td>
+                                        <td>42</td>
+                                        <td>40</td>
+                                        <td>63%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Faisalabad</td>
+                                        <td>50</td>
+                                        <td>45</td>
+                                        <td>5</td>
+                                        <td>90%</td>
+                                    </tr>
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Terminal Maintenance Section -->
+            <div id="terminal-maintenance" class="dashboard-section">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-gear"></i> Terminal Maintenance Overview</h5>
+                        <div class="card-icon icon-blue">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <!-- Terminal List -->
+                        <div class="col-lg-4 col-md-5 mb-4">
+                            <div class="terminal-list-container">
+                                <h6 class="text-secondary mb-3">Select Terminal</h6>
+                                <div class="terminal-list" id="terminalList">
+                                    <div class="terminal-item active" onclick="showTerminalDetails('machike')">
+                                        <div class="terminal-icon">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                        </div>
+                                        <div class="terminal-name">Machike Terminal</div>
+                                        <div class="terminal-status">
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                    </div>
+                                    <div class="terminal-item" onclick="showTerminalDetails('portqasim')">
+                                        <div class="terminal-icon">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                        </div>
+                                        <div class="terminal-name">Port Qasim Terminal&nbsp;</div>
+                                        <div class="terminal-status">
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                    </div>
+                                    <div class="terminal-item" onclick="showTerminalDetails('dikhan')">
+                                        <div class="terminal-icon">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                        </div>
+                                        <div class="terminal-name">D.I Khan Terminal&nbsp;</div>
+                                        <div class="terminal-status">
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                    </div>
+                                    <div class="terminal-item" onclick="showTerminalDetails('mehmoodkot')">
+                                        <div class="terminal-icon">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                        </div>
+                                        <div class="terminal-name">Mehmood Kot Terminal&nbsp;</div>
+                                        <div class="terminal-status">
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                    </div>
+                                    <div class="terminal-item" onclick="showTerminalDetails('rawalpindi')">
+                                        <div class="terminal-icon">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                        </div>
+                                        <div class="terminal-name">Rawalpindi Terminal&nbsp;</div>
+                                        <div class="terminal-status">
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                    </div>
+                                    <div class="terminal-item" onclick="showTerminalDetails('daulatpur')">
+                                        <div class="terminal-icon">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                        </div>
+                                        <div class="terminal-name">Daulatpur Terminal&nbsp;</div>
+                                        <div class="terminal-status">
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                    </div>
+                                    <div class="terminal-item" onclick="showTerminalDetails('korangi')">
+                                        <div class="terminal-icon">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                        </div>
+                                        <div class="terminal-name">Korangi Terminal&nbsp;</div>
+                                        <div class="terminal-status">
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                    </div>
+                                    <div class="terminal-item" onclick="showTerminalDetails('sahiwal')">
+                                        <div class="terminal-icon">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                        </div>
+                                        <div class="terminal-name">Sahiwal Terminal&nbsp;</div>
+                                        <div class="terminal-status">
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                    </div>
+                                    <div class="terminal-item" onclick="showTerminalDetails('shikarpur')">
+                                        <div class="terminal-icon">
+                                            <i class="bi bi-geo-alt-fill"></i>
+                                        </div>
+                                        <div class="terminal-name">Shikarpur Terminal&nbsp;</div>
+                                        <div class="terminal-status">
+                                            <span class="badge bg-success">Active</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Terminal Details -->
+                        <div class="col-lg-8 col-md-7 mb-4">
+                            <div id="terminalDetails" class="terminal-details-container">
+                                <!-- Default content will be shown here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Activity Categories -->
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h5><i class="bi bi-list-ul"></i> Activity Categories</h5>
+                        <div class="card-icon icon-blue">
+                            <i class="bi bi-grid"></i>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mb-4">
+                            <div class="metric-highlight text-center">
+                                <h6>Preventive Maintenance</h6>
+                                <p class="text-secondary">Routine checks, inspections, cleaning, testing</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="metric-highlight text-center">
+                                <h6>Corrective Maintenance</h6>
+                                <p class="text-secondary">Repairs, replacements, troubleshooting&nbsp;</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="metric-highlight text-center">
+                                <h6>Civil Works</h6>
+                                <p class="text-secondary">Roof treatments, drain pits, strainer mesh, flooring, structures</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-4">
+                            <div class="metric-highlight text-center">
+                                <h6>Installations</h6>
+                                <p class="text-secondary">UPS, ATG, Solar panels, pumps, valves, pipelines</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Documentation Section -->
+            <div id="documentation" class="dashboard-section">
+                <div class="tab-navigation">
+                    <button class="tab-btn active" onclick="showTab('asset-verification', this)"><i class="bi bi-clipboard-check"></i> Asset Verification</button>
+                    <button class="tab-btn" onclick="showTab('key-achievements', this)"><i class="bi bi-trophy"></i> Key Achievements</button>
+                    <button class="tab-btn" onclick="showTab('procedural-updates', this)"><i class="bi bi-file-earmark-text"></i> Procedural Updates</button>
+                </div>
+                
+                <!-- Asset Verification Tab -->
+                <div id="asset-verification" class="tab-content active">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-clipboard-check"></i> Asset Verification &amp; Records</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <div class="metric-highlight">
+                                    <h6>Retail Outlets Verified</h6>
+                                    <div class="value">772</div>
+                                    <div class="change"><i class="bi bi-arrow-up"></i> ≈85% of total outlets</div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mb-4">
+                                <div class="metric-highlight">
+                                    <h6>Sites Entered to E-Suite</h6>
+                                    <div class="value">530</div>
+                                    <div class="change"><i class="bi bi-arrow-up"></i> ≈65% of total sites</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-label">
+                                <span>Retail Outlets Verification Progress</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 85%;"></div>
+                            </div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-label">
+                                <span>E-Suite Data Entry Progress</span>
+                                <span>65%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 65%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Key Achievements Tab -->
+                <div id="key-achievements" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-trophy"></i> Key Activities &amp;&nbsp; Updates</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-check-circle-fill text-success me-2"></i> Maintenance KPIs &amp; SLAs Defined</h6>
+                                    <p>Efficiency, timeliness, and quality metrics established. Proposal for IT system integration in complaint management system is in progress</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-check-circle-fill text-success me-2"></i>Session on Code of Conduct</h6>
+                                    <p><p class="MsoNormal">Considering the Integrity related challenges identified
+within department, In house Trainings / Refresher on APL “Code of Conduct” was
+conducted.<o:p></o:p></p></p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-check-circle-fill text-success me-2"></i> Organogram Proposed</h6>
+                                    <p>New structure proposed for the department to improve efficiency and reporting lines.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-check-circle-fill text-success me-2"></i> Cost Saving Tracker</h6>
+                                    <p>Introduced and shared across all regions to monitor and optimize expenses.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-check-circle-fill text-success me-2"></i> 5% Budget Initiative</h6>
+                                    <p>Cost-saving initiative shared with management for implementation across the department.</p>
+                                </div>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Procedural Updates Tab -->
+                <div id="procedural-updates" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-file-earmark-text"></i> Documentation &amp; Procedural Updates</h5>
+                        </div>
+                        <div class="project-card">
+                            <h6>QA Checklists Updated</h6>
+                            <p>Quality Control checklists have been updated and deployed across all facilities. Quality assurance remains the responsibility of all staff, with each Regional Engineer required to complete the inspection checklist and submit it to the Quality Control function, which reserves the right to conduct random checks where required.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Projects Section -->
+            <div id="projects" class="dashboard-section">
+                <div class="tab-navigation">
+                    <button class="tab-btn active" onclick="showTab('key-ongoing-projects', this)"><i class="bi bi-kanban"></i> Key Ongoing Projects</button>
+                    <button class="tab-btn" onclick="showTab('pipeline-terminal-projects', this)"><i class="bi bi-arrow-left-right"></i> Pipeline/Terminal Projects</button>
+                    <button class="tab-btn" onclick="showTab('upcoming-projects', this)"><i class="bi bi-lightning-charge"></i> Upcoming Projects</button>
+                </div>
+                
+                <!-- Key Ongoing Projects Tab -->
+                <div id="key-ongoing-projects" class="tab-content active">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-kanban"></i> Key Ongoing Projects &amp; Progress</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6>LPG Filling Plant, Rawalpindi</h6>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-label">
+                                            <span>Progress</span>
+                                            <span>100%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill" style="width: 100%;"></div>
+                                        </div>
+                                    </div>
+                                    <p>Construction complete, commissioning pending</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6>ATGs Installation, Rawalpindi</h6>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-label">
+                                            <span>Progress</span>
+                                            <span>100%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill" style="width: 100%;"></div>
+                                        </div>
+                                    </div>
+                                    <p>Installation &amp; commissioning completed</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6>ATGs Installation, Machike</h6>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-label">
+                                            <span>Progress</span>
+                                            <span>75%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill" style="width: 75%;"></div>
+                                        </div>
+                                    </div>
+                                    <p>Commissioning activities underway</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6>PMG Tank Construction, RBT</h6>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-label">
+                                            <span>Progress</span>
+                                            <span>10%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill" style="width: 10%;"></div>
+                                        </div>
+                                    </div>
+                                    <p>Procurement process in progress</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pipeline/Terminal Projects Tab (On Hold) -->
+                <div id="pipeline-terminal-projects" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-arrow-left-right"></i> Additional Pipeline/Terminal Projects On Hold</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-4">
+                                <div class="project-card">
+                                    <h6>Taru Jabba Terminal</h6>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-label">
+                                            <span>Progress</span>
+                                            <span>0%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill" style="width: 0%;"></div>
+                                        </div>
+                                    </div>
+                                    <p>Pending; MOU confirmation</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="project-card">
+                                    <h6>PMG Pipeline (ARL → APL)</h6>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-label">
+                                            <span>Progress</span>
+                                            <span>0%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill" style="width: 0%;"></div>
+                                        </div>
+                                    </div>
+                                    <p>Procurement stage</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4 mb-4">
+                                <div class="project-card">
+                                    <h6>Pipeline (APL → PARCO)</h6>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-label">
+                                            <span>Progress</span>
+                                            <span>0%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill" style="width: 0%;"></div>
+                                        </div>
+                                    </div>
+                                    <p>Awaiting Highway NOC</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Upcoming Projects Tab -->
+                <div id="upcoming-projects" class="tab-content">
+                    <div class="dashboard-card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-lightning-charge"></i> Upcoming Projects</h5>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-ev-station me-2"></i> EV Charger at Rashakai Service Area South</h6>
+                                    <p>A 50 kV EV charger is planned for installation at Rashakai Service Area South. Ordering of civil, electrical, and canopy work is in progress. Technical evaluation has been sent to procurement.</p>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-label">
+                                            <span>Progress</span>
+                                            <span>40%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill" style="width: 40%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="project-card">
+                                    <h6><i class="bi bi-sun me-2"></i> Construction of XTRON Shed, Record Room, Warehouse, and Maintenance Shed & Scrap Yard at APL Port Qasim Terminal:</h6>
+                                    <p>Technical evaluation for construction has been submitted to Procurement Department. Case is under negotiation with contractor.</p>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-label">
+                                            <span>Progress</span>
+                                            <span>30%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill" style="width: 30%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="project-card">
+                                    <h6><i class="bi bi-sun me-2"></i> Solar System Installation</h6>
+                                    <p>Installation of a 100 kW solar system at Sahiwal Terminal is underway, with competitive bidding ongoing through the procurement department.</p>
+                                    <div class="progress-bar-container">
+                                        <div class="progress-bar-label">
+                                            <span>Progress</span>
+                                            <span>30%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-bar-fill" style="width: 30%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <!-- Dashboard Footer -->
+        <div class="dashboard-footer">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;Prepared By : Mahnoor Qaiser<div class="">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; (MTO Engineering)</div></div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Theme Toggle Function
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (body.classList.contains('light-theme')) {
+                body.classList.remove('light-theme');
+                themeIcon.classList.remove('bi-sun-fill');
+                themeIcon.classList.add('bi-moon-fill');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.classList.add('light-theme');
+                themeIcon.classList.remove('bi-moon-fill');
+                themeIcon.classList.add('bi-sun-fill');
+                localStorage.setItem('theme', 'light');
+            }
+            
+            // Update chart colors based on theme
+            updateChartColors();
+        }
+        
+        // Check for saved theme preference or default to dark mode
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedTheme = localStorage.getItem('theme');
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (savedTheme === 'light') {
+                document.body.classList.add('light-theme');
+                themeIcon.classList.remove('bi-moon-fill');
+                themeIcon.classList.add('bi-sun-fill');
+            }
+            
+            // Initialize charts with appropriate colors
+            initializeCharts();
+        });
+        
+        // Section Navigation
+        function showSection(sectionId, element) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.dashboard-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update sidebar menu
+            const menuItems = document.querySelectorAll('.sidebar-menu a');
+            menuItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Add active class to clicked menu item
+            element.classList.add('active');
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 992) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        }
+        
+        // Tab Navigation
+        function showTab(tabId, element) {
+            // Get all tabs in the current section
+            const parentSection = element.closest('.dashboard-section');
+            const tabs = parentSection.querySelectorAll('.tab-content');
+            const tabBtns = parentSection.querySelectorAll('.tab-btn');
+            
+            // Hide all tabs
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all buttons
+            tabBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked button
+            element.classList.add('active');
+        }
+        
+        // Toggle Details
+        function toggleDetails(detailsId) {
+            const details = document.getElementById(detailsId);
+            const button = details.previousElementSibling.querySelector('.toggle-btn');
+            
+            if (details.classList.contains('show')) {
+                details.classList.remove('show');
+                button.innerHTML = '<i class="bi bi-eye me-1"></i> Show Details';
+            } else {
+                details.classList.add('show');
+                button.innerHTML = '<i class="bi bi-eye-slash me-1"></i> Hide Details';
+            }
+        }
+        
+        // Mobile Menu Toggle
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            document.getElementById('sidebar').classList.toggle('active');
+        });
+        
+        // Filter Terminals
+        function filterTerminals(region) {
+            const pills = document.querySelectorAll('.filter-pill');
+            pills.forEach(pill => {
+                pill.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            const terminalCards = document.querySelectorAll('.terminal-card-container');
+            terminalCards.forEach(card => {
+                if (region === 'all' || card.dataset.region === region) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+        
+        // Terminal data
+        const terminalData = {
+            machike: {
+                name: "Machike Terminal",
+                status: "Active",
+                stats: {
+                    activities: 4,
+                    completed: 4,
+                    inProgress: 0
+                },
+                activities: {
+                    preventive: [
+                        {
+                            type: "Preventive",
+                            description: "MCC Room inspection → sensors, relays, breakers, AC timings checked",
+                            status: "Completed"
+                        }
+                    ],
+                    corrective: [
+                        {
+                            type: "Corrective",
+                            description: "CGP-1 Pump → gland packing replaced → leakage eliminated",
+                            status: "Completed"
+                        }
+                    ],
+                    civil: [
+                        {
+                            type: "Civil Corrective",
+                            description: "Metering strainer mesh repaired → filtration efficiency restored",
+                            status: "Completed"
+                        }
+                    ],
+                    installation: [
+                        {
+                            type: "Installation",
+                            description: "06 KVA UPS installed for laboratory → ensured uninterrupted operations",
+                            status: "Completed"
+                        }
+                    ]
+                },
+                note: "All systems operating at optimal efficiency. No critical issues reported."
+            },
+            portqasim: {
+                name: "Port Qasim Terminal",
+                status: "Active",
+                stats: {
+                    activities: 3,
+                    completed: 3,
+                    inProgress: 0
+                },
+                activities: {
+                    preventive: [],
+                    corrective: [
+                        {
+                            type: "Corrective",
+                            description: "Jockey Pump Fire Panel → pressure transmitter replaced + switch installed",
+                            status: "Completed"
+                        }
+                    ],
+                    civil: [],
+                    installation: [
+                        {
+                            type: "Installation",
+                            description: "Blind Plate (30” dia) installed at FTTL for vessel handling",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Project",
+                            description: "Tank IFR re-ordering initiated; a third party will be engage for nitrogen handling.",
+                            status: "In Progress"
+                        }
+                    ]
+                },
+          
+            },
+            dikhan: {
+                name: "D.I Khan Terminal",
+                status: "Active",
+                stats: {
+                    activities: 4,
+                    completed: 4,
+                    inProgress: 0
+                },
+                activities: {
+                    preventive: [
+                        {
+                            type: "Preventive",
+                            description: "Generator oil & filters replaced",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Preventive",
+                            description: "IFR & TRV inspection",
+                            status: "Completed"
+                        }
+                    ],
+                    corrective: [
+                        {
+                            type: "Corrective",
+                            description: "BELZONA coating for seepage prevention at tank",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Corrective",
+                            description: "Fire engine batteries replaced",
+                            status: "Completed"
+                        }
+                    ],
+                    civil: [],
+                    installation: []
+                },
+                note: "All preventive maintenance completed. Fire safety systems fully operational."
+            },
+            mehmoodkot: {
+                name: "Mehmood Kot Terminal",
+                status: "Active",
+                stats: {
+                    activities: 3,
+                    completed: 3,
+                    inProgress: 0
+                },
+                activities: {
+                    preventive: [
+                        {
+                            type: "Preventive",
+                            description: "Routine check-up of systems & firefighting pipelines",
+                            status: "Completed"
+                        }
+                    ],
+                    corrective: [
+                        {
+                            type: "Corrective",
+                            description: "Fire monitor servicing → restored firefighting readiness",
+                            status: "Completed"
+                        }
+                    ],
+                    civil: [
+                        {
+                            type: "Civil",
+                            description: "Prover tanks inspection & drain pits work → water accumulation issue addressed",
+                            status: "Completed"
+                        }
+                    ],
+                    installation: []
+                },
+                note: "Drainage system improved. Fire safety equipment fully functional."
+            },
+            rawalpindi: {
+                name: "Rawalpindi Terminal",
+                status: "Active",
+                stats: {
+                    activities: 5,
+                    completed: 5,
+                    inProgress: 0
+                },
+                activities: {
+                    preventive: [
+                        {
+                            type: "Preventive",
+                            description: "IFR (floating roof) inspection",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Preventive",
+                            description: "Pump pipeline checks",
+                            status: "Completed"
+                        }
+                    ],
+                    corrective: [
+                        {
+                            type: "Corrective",
+                            description: "Smoke detector false alarm troubleshooting",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Corrective",
+                            description: "Fire hydrant system rectified",
+                            status: "Completed"
+                        }
+                    ],
+                    civil: [],
+                    installation: [
+                        {
+                            type: "Installation",
+                            description: "Suction/discharge pipelines installed → improved flow management",
+                            status: "Completed"
+                        }
+                    ]
+                },
+                note: "All safety systems operational. Flow management optimized."
+            },
+            daulatpur: {
+                name: "Daulatpur Terminal",
+                status: "Active",
+                stats: {
+                    activities: 4,
+                    completed: 4,
+                    inProgress: 0
+                },
+                activities: {
+                    preventive: [
+                        {
+                            type: "Preventive",
+                            description: "UPS DB cleaning & load testing",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Preventive",
+                            description: "Solar system health check",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Preventive",
+                            description: "ATG NMR84 calibration",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Preventive",
+                            description: "Jockey pump control panel inspection",
+                            status: "Completed"
+                        }
+                    ],
+                    corrective: [],
+                    civil: [],
+                    installation: []
+                },
+                note: "All systems calibrated and tested. Solar system performing optimally."
+            },
+            korangi: {
+                name: "Korangi Terminal",
+                status: "Active",
+                stats: {
+                    activities: 4,
+                    completed: 4,
+                    inProgress: 0
+                },
+                activities: {
+                    preventive: [
+                        {
+                            type: "Preventive",
+                            description: "Smoke detection system reset",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Preventive",
+                            description: "Swing ladder inspection",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Preventive",
+                            description: "Ball valves serviced",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Preventive",
+                            description: "Loading arms lubrication & inspection",
+                            status: "Completed"
+                        }
+                    ],
+                    corrective: [],
+                    civil: [],
+                    installation: []
+                },
+                note: "All loading equipment serviced and inspected. Safety systems operational."
+            },
+            sahiwal: {
+                name: "Sahiwal Terminal",
+                status: "Active",
+                stats: {
+                    activities: 4,
+                    completed: 4,
+                    inProgress: 0
+                },
+                activities: {
+                    preventive: [
+                        {
+                            type: "Preventive",
+                            description: "Electrical panels inspection",
+                            status: "Completed"
+                        },
+                        {
+                            type: "Preventive",
+                            description: "Gate valve checks",
+                            status: "Completed"
+                        }
+                    ],
+                    corrective: [
+                        {
+                            type: "Corrective",
+                            description: "PMG-2 meter troubleshooting",
+                            status: "Completed"
+                        }
+                    ],
+                    civil: [
+                        {
+                            type: "Civil",
+                            description: "Roof repairs & waterproofing treatment",
+                            status: "Completed"
+                        }
+                    ],
+                    installation: []
+                },
+                note: "Roof waterproofing completed. All meters and valves functioning properly."
+            },
+            shikarpur: {
+                name: "Shikarpur Terminal",
+                status: "Active",
+                stats: {
+                    activities: 4,
+                    completed: 4,
+                    inProgress: 0
+                },
+                activities: {
+                    preventive: [
+                        {
+                            type: "Preventive",
+                            description: "Generator oil & filters replaced",
+                            status: "Completed"
+                        }
+                    ],
+                    corrective: [
+                        {
+                            type: "Corrective",
+                            description: "CP system maintenance by OEM",
+                            status: "Completed"
+                        }
+                    ],
+                    civil: [],
+                    installation: [
+                        {
+                            type: "Installation",
+                            description: "Sampling valve installed at pig receiver",
+                            status: "Completed"
+                        }
+                    ],
+                    operational: [
+                        {
+                            type: "Operational",
+                            description: "HSD receipt (15,000 MT) carried out smoothly",
+                            status: "Completed"
+                        }
+                    ]
+                },
+
+            }
+        };
+        
+        // Show terminal details
+        function showTerminalDetails(terminalId) {
+            // Update active state in the list
+            const terminalItems = document.querySelectorAll('.terminal-item');
+            terminalItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`.terminal-item[onclick="showTerminalDetails('${terminalId}')"]`).classList.add('active');
+            
+            // Get terminal data
+            const terminal = terminalData[terminalId];
+            if (!terminal) return;
+            
+            // Generate HTML for terminal details
+            let html = `
+                <div class="terminal-header">
+                    <h3>${terminal.name}</h3>
+                    <div class="terminal-status">
+                        <span class="badge bg-success">${terminal.status}</span>
+                    </div>
+                </div>
+                
+                <div class="terminal-stats">
+                    <div class="terminal-stat">
+                        <div class="terminal-stat-value">${terminal.stats.activities}</div>
+                        <div class="terminal-stat-label">Total Activities</div>
+                    </div>
+                    <div class="terminal-stat">
+                        <div class="terminal-stat-value">${terminal.stats.completed}</div>
+                        <div class="terminal-stat-label">Completed</div>
+                    </div>
+                    <div class="terminal-stat">
+                        <div class="terminal-stat-value">${terminal.stats.inProgress}</div>
+                        <div class="terminal-stat-label">In Progress</div>
+                    </div>
+                </div>
+            `;
+            
+            // Add activity sections
+            if (terminal.activities.installation && terminal.activities.installation.length > 0) {
+                html += `
+                    <div class="activity-section">
+                        <div class="activity-section-title">
+                            <i class="bi bi-plus-circle"></i> Installation Activities
+                        </div>
+                        <div class="activity-list">
+                `;
+                
+                terminal.activities.installation.forEach(activity => {
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="bi bi-plus-circle"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-type">${activity.type}</div>
+                                <div class="activity-description">${activity.description}</div>
+                            </div>
+                            <div class="activity-status">
+                                <span class="badge ${activity.status === 'Completed' ? 'bg-success' : 'bg-warning'}">${activity.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (terminal.activities.preventive && terminal.activities.preventive.length > 0) {
+                html += `
+                    <div class="activity-section">
+                        <div class="activity-section-title">
+                            <i class="bi bi-shield-check"></i> Preventive Maintenance
+                        </div>
+                        <div class="activity-list">
+                `;
+                
+                terminal.activities.preventive.forEach(activity => {
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-type">${activity.type}</div>
+                                <div class="activity-description">${activity.description}</div>
+                            </div>
+                            <div class="activity-status">
+                                <span class="badge ${activity.status === 'Completed' ? 'bg-success' : 'bg-warning'}">${activity.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (terminal.activities.corrective && terminal.activities.corrective.length > 0) {
+                html += `
+                    <div class="activity-section">
+                        <div class="activity-section-title">
+                            <i class="bi bi-tools"></i> Corrective Maintenance
+                        </div>
+                        <div class="activity-list">
+                `;
+                
+                terminal.activities.corrective.forEach(activity => {
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="bi bi-tools"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-type">${activity.type}</div>
+                                <div class="activity-description">${activity.description}</div>
+                            </div>
+                            <div class="activity-status">
+                                <span class="badge ${activity.status === 'Completed' ? 'bg-success' : 'bg-warning'}">${activity.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (terminal.activities.civil && terminal.activities.civil.length > 0) {
+                html += `
+                    <div class="activity-section">
+                        <div class="activity-section-title">
+                            <i class="bi bi-building"></i> Civil Works
+                        </div>
+                        <div class="activity-list">
+                `;
+                
+                terminal.activities.civil.forEach(activity => {
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-type">${activity.type}</div>
+                                <div class="activity-description">${activity.description}</div>
+                            </div>
+                            <div class="activity-status">
+                                <span class="badge ${activity.status === 'Completed' ? 'bg-success' : 'bg-warning'}">${activity.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (terminal.activities.operational && terminal.activities.operational.length > 0) {
+                html += `
+                    <div class="activity-section">
+                        <div class="activity-section-title">
+                            <i class="bi bi-gear"></i> Operational Activities
+                        </div>
+                        <div class="activity-list">
+                `;
+                
+                terminal.activities.operational.forEach(activity => {
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <i class="bi bi-gear"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-type">${activity.type}</div>
+                                <div class="activity-description">${activity.description}</div>
+                            </div>
+                            <div class="activity-status">
+                                <span class="badge ${activity.status === 'Completed' ? 'bg-success' : 'bg-warning'}">${activity.status}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // Add note
+            if (terminal.note) {
+                html += `
+                    <div class="terminal-note">
+                        <p><i class="bi bi-info-circle me-2"></i>${terminal.note}</p>
+                    </div>
+                `;
+            }
+            
+            // Update the details container
+            document.getElementById('terminalDetails').innerHTML = html;
+        }
+        
+        // Initialize with first terminal
+        document.addEventListener('DOMContentLoaded', function() {
+            showTerminalDetails('machike');
+        });
+        
+        // Chart instances
+        let charts = {};
+        
+        // Get chart colors based on theme
+        function getChartColors() {
+            const isLightTheme = document.body.classList.contains('light-theme');
+            
+            if (isLightTheme) {
+                return {
+                    primary: '#3b82f6',
+                    success: '#10b981',
+                    warning: '#f59e0b',
+                    danger: '#ef4444',
+                    info: '#06b6d4',
+                    purple: '#8b5cf6',
+                    text: '#1e293b',
+                    grid: '#e2e8f0',
+                    background: 'rgba(255, 255, 255, 0.7)'
+                };
+            } else {
+                return {
+                    primary: '#60a5fa',
+                    success: '#34d399',
+                    warning: '#fbbf24',
+                    danger: '#f87171',
+                    info: '#22d3ee',
+                    purple: '#a78bfa',
+                    text: '#f1f5f9',
+                    grid: '#334155',
+                    background: 'rgba(30, 41, 59, 0.7)'
+                };
+            }
+        }
+        
+        // Initialize all charts
+        function initializeCharts() {
+            const colors = getChartColors();
+            
+            // Outlet Progress Chart
+            const outletProgressCtx = document.getElementById('outletProgressChart').getContext('2d');
+            charts.outletProgress = new Chart(outletProgressCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Hazara Service Area', 'Quality Filling Station', 'Askari 14 Rawalpindi', 'Askari Quetta'],
+                    datasets: [{
+                        label: 'Completion %',
+                        data: [65, 88, 88, 80],
+                        backgroundColor: [
+                            colors.warning,
+                            colors.success,
+                            colors.primary,
+                            colors.primary
+                        ],
+                        borderColor: [
+                            colors.warning,
+                            colors.success,
+                            colors.primary,
+                            colors.primary
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                },
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Sites By Fiscal Year Chart
+            const sitesByFiscalYearCtx = document.getElementById('sitesByFiscalYearChart').getContext('2d');
+            charts.sitesByFiscalYear = new Chart(sitesByFiscalYearCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2022-2023', '2023-2024', '2024-2025', '2025-2026'],
+                    datasets: [{
+                        label: 'Sites Commissioned',
+                        data: [28, 47, 32, 4],
+                        backgroundColor: [
+                            colors.primary,
+                            colors.success,
+                            colors.warning,
+                            colors.info
+                        ],
+                        borderColor: [
+                            colors.primary,
+                            colors.success,
+                            colors.warning,
+                            colors.info
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Dealer Financed Chart
+            const dealerFinancedCtx = document.getElementById('dealerFinancedChart').getContext('2d');
+            charts.dealerFinanced = new Chart(dealerFinancedCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Peshawar', 'Rawalpindi', 'Lahore', 'Faisalabad', 'Multan', 'Karachi'],
+                    datasets: [
+                        {
+                            label: 'Under Construction',
+                            data: [1, 14, 2, 5, 5, 8],
+                            backgroundColor: colors.primary,
+                            borderColor: colors.primary,
+                            borderWidth: 1,
+                            borderRadius: 8
+                        },
+                        {
+                            label: 'Upgrading',
+                            data: [1, 5, 9, 3, 4, 3],
+                            backgroundColor: colors.danger,
+                            borderColor: colors.danger,
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            stacked: true,
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Retail Maintenance Chart
+            const retailMaintenanceCtx = document.getElementById('retailMaintenanceChart').getContext('2d');
+            charts.retailMaintenance = new Chart(retailMaintenanceCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Resolved', 'Pending'],
+                    datasets: [{
+                        data: [487, 121],
+                        backgroundColor: [
+                            colors.success,
+                            colors.danger
+                        ],
+                        borderColor: [
+                            colors.success,
+                            colors.danger
+                        ],
+                        borderWidth: 1,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: colors.text,
+                                padding: 16,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+            
+            // Licenses Chart
+            const licensesCtx = document.getElementById('licensesChart').getContext('2d');
+            charts.licenses = new Chart(licensesCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Renewed', 'Not Renewed'],
+                    datasets: [{
+                        data: [617, 130],
+                        backgroundColor: [
+                            colors.warning,
+                            colors.grid
+                        ],
+                        borderColor: [
+                            colors.warning,
+                            colors.grid
+                        ],
+                        borderWidth: 1,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: colors.text,
+                                padding: 16,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Licenses by Region Chart
+            const licensesByRegionCtx = document.getElementById('licensesByRegionChart').getContext('2d');
+            charts.licensesByRegion = new Chart(licensesByRegionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Peshawar', 'Azad Kashmir', 'Rawalpindi', 'Lahore', 'Multan', 'South'],
+                    datasets: [
+                        {
+                            label: 'Total',
+                            data: [96, 25, 175, 201, 123, 127],
+                            backgroundColor: colors.grid,
+                            borderColor: colors.grid,
+                            borderWidth: 1,
+                            borderRadius: 8
+                        },
+                        {
+                            label: 'Renewed',
+                            data: [89, 25, 150, 171, 102, 78],
+                            backgroundColor: colors.warning,
+                            borderColor: colors.warning,
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Complaints Distribution Chart
+            const complaintsDistributionCtx = document.getElementById('complaintsDistributionChart').getContext('2d');
+            charts.complaintsDistribution = new Chart(complaintsDistributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Dispensers', 'Signages', 'Generator Services', 'Civil Works', 'Electrical Works'],
+                    datasets: [{
+                        data: [352, 84, 25, 140, 10],
+                        backgroundColor: [
+                            colors.danger,
+                            colors.primary,
+                            colors.warning,
+                            colors.success,
+                            colors.purple
+                        ],
+                        borderColor: [
+                            colors.danger,
+                            colors.primary,
+                            colors.warning,
+                            colors.success,
+                            colors.purple
+                        ],
+                        borderWidth: 1,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right',
+                            labels: {
+                                color: colors.text,
+                                padding: 16,
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+            
+            // Complaints By Type Chart
+            const complaintsByTypeCtx = document.getElementById('complaintsByTypeChart').getContext('2d');
+            charts.complaintsByType = new Chart(complaintsByTypeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Dispensers', 'Signages', 'Civil Works', 'Generator Services', 'Electrical Works'],
+                    datasets: [{
+                        label: 'Number of Complaints',
+                        data: [352, 84, 140, 25, 10],
+                        backgroundColor: [
+                            colors.danger,
+                            colors.primary,
+                            colors.success,
+                            colors.warning,
+                            colors.purple
+                        ],
+                        borderColor: [
+                            colors.danger,
+                            colors.primary,
+                            colors.success,
+                            colors.warning,
+                            colors.purple
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Regional Performance Chart
+            const regionalPerformanceCtx = document.getElementById('regionalPerformanceChart').getContext('2d');
+            charts.regionalPerformance = new Chart(regionalPerformanceCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Rawalpindi', 'Peshawar', 'Lahore', 'Multan', 'South', 'Faisalabad'],
+                    datasets: [
+                        {
+                            label: 'Total Complaints',
+                            data: [285, 44, 104, 40, 82, 50],
+                            backgroundColor: colors.grid,
+                            borderColor: colors.grid,
+                            borderWidth: 1,
+                            borderRadius: 8
+                        },
+                        {
+                            label: 'Resolved Complaints',
+                            data: [239, 41, 103, 31, 42, 45],
+                            backgroundColor: colors.success,
+                            borderColor: colors.success,
+                            borderWidth: 1,
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: colors.text,
+                                font: {
+                                    size: 11
+                                }
+                            },
+                            grid: {
+                                color: colors.grid
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Update chart colors when theme changes
+        function updateChartColors() {
+            const colors = getChartColors();
+            
+            // Update each chart with new colors
+            Object.keys(charts).forEach(chartKey => {
+                const chart = charts[chartKey];
+                
+                // Update data colors
+                if (chart.data.datasets) {
+                    chart.data.datasets.forEach((dataset, i) => {
+                        if (chart.config.type === 'bar' || chart.config.type === 'line') {
+                            if (chartKey === 'outletProgress') {
+                                dataset.backgroundColor = [
+                                    colors.warning,
+                                    colors.success,
+                                    colors.primary,
+                                    colors.primary
+                                ];
+                                dataset.borderColor = [
+                                    colors.warning,
+                                    colors.success,
+                                    colors.primary,
+                                    colors.primary
+                                ];
+                            } else if (chartKey === 'sitesByFiscalYear') {
+                                dataset.backgroundColor = [
+                                    colors.primary,
+                                    colors.success,
+                                    colors.warning,
+                                    colors.info
+                                ];
+                                dataset.borderColor = [
+                                    colors.primary,
+                                    colors.success,
+                                    colors.warning,
+                                    colors.info
+                                ];
+                            } else if (chartKey === 'dealerFinanced') {
+                                dataset.backgroundColor = i === 0 ? colors.primary : colors.danger;
+                                dataset.borderColor = i === 0 ? colors.primary : colors.danger;
+                            } else if (chartKey === 'licensesByRegion') {
+                                dataset.backgroundColor = i === 0 ? colors.grid : colors.warning;
+                                dataset.borderColor = i === 0 ? colors.grid : colors.warning;
+                            } else if (chartKey === 'complaintsByType') {
+                                dataset.backgroundColor = [
+                                    colors.danger,
+                                    colors.primary,
+                                    colors.success,
+                                    colors.warning,
+                                    colors.purple
+                                ];
+                                dataset.borderColor = [
+                                    colors.danger,
+                                    colors.primary,
+                                    colors.success,
+                                    colors.warning,
+                                    colors.purple
+                                ];
+                            } else if (chartKey === 'regionalPerformance') {
+                                dataset.backgroundColor = i === 0 ? colors.grid : colors.success;
+                                dataset.borderColor = i === 0 ? colors.grid : colors.success;
+                            } else {
+                                dataset.backgroundColor = colors.primary;
+                                dataset.borderColor = colors.primary;
+                            }
+                        } else if (chart.config.type === 'doughnut' || chart.config.type === 'pie') {
+                            if (chartKey === 'retailMaintenance') {
+                                dataset.backgroundColor = [
+                                    colors.success,
+                                    colors.danger
+                                ];
+                                dataset.borderColor = [
+                                    colors.success,
+                                    colors.danger
+                                ];
+                            } else if (chartKey === 'licenses') {
+                                dataset.backgroundColor = [
+                                    colors.warning,
+                                    colors.grid
+                                ];
+                                dataset.borderColor = [
+                                    colors.warning,
+                                    colors.grid
+                                ];
+                            } else if (chartKey === 'complaintsDistribution') {
+                                dataset.backgroundColor = [
+                                    colors.danger,
+                                    colors.primary,
+                                    colors.warning,
+                                    colors.success,
+                                    colors.purple
+                                ];
+                                dataset.borderColor = [
+                                    colors.danger,
+                                    colors.primary,
+                                    colors.warning,
+                                    colors.success,
+                                    colors.purple
+                                ];
+                            }
+                        }
+                    });
+                }
+                
+                // Update scale colors
+                if (chart.options.scales) {
+                    if (chart.options.scales.x) {
+                        chart.options.scales.x.ticks.color = colors.text;
+                        chart.options.scales.x.ticks.font = { size: 11 };
+                        chart.options.scales.x.grid.color = colors.grid;
+                    }
+                    if (chart.options.scales.y) {
+                        chart.options.scales.y.ticks.color = colors.text;
+                        chart.options.scales.y.ticks.font = { size: 11 };
+                        chart.options.scales.y.grid.color = colors.grid;
+                    }
+                }
+                
+                // Update legend colors
+                if (chart.options.plugins && chart.options.plugins.legend) {
+                    chart.options.plugins.legend.labels.color = colors.text;
+                    chart.options.plugins.legend.labels.font = { size: 11 };
+                }
+                
+                // Update the chart
+                chart.update();
+            });
+        }
+    </script>
+
+</body></html>
